@@ -6,6 +6,9 @@ Double Click to reset.
 
 GZIP size of library is about 610 bytes.
 
+For a DEMO check this:
+   http://anitasv.github.io/zoom.html
+
 Example
     <pre>
     <code>
@@ -20,3 +23,4 @@ Example
     &lt;/script&gt;
     </code>
     </pre>
+
