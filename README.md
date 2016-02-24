@@ -1,6 +1,9 @@
 # zoom
 Javascript library to do pinch zoom that preserves scale and rotation correctly.
 
+Pinch to zoom, rotate and translate. 
+Double Click to reset.
+
 Example
     <pre>
     <code>
