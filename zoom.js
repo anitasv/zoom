@@ -102,7 +102,7 @@ function Zoom(elem) {
     var me = this;
     var tapped = false;
 
-    elem.on('touchstart', function(evt) {
+    elem.parent().on('touchstart', function(evt) {
         var t = evt.originalEvent.touches;
         if (!t) {
             return false;
@@ -123,7 +123,7 @@ function Zoom(elem) {
         }
     });
     
-    elem.on('touchmove', function(evt) {
+    elem.parent().on('touchmove', function(evt) {
         var t = evt.originalEvent.touches;
         if (!t || t.length != 2) {
             return false;
@@ -139,7 +139,7 @@ function Zoom(elem) {
         me.update(finalT);
     });
 
-    elem.on('touchend', function(evt) {
+    elem.parent().on('touchend', function(evt) {
         if (me.zooming) {
             me.activeZoom = cascade(me.currentZoom, me.activeZoom);
             me.zooming = false;
@@ -154,9 +154,45 @@ Zoom.prototype.update = function(finalT) {
 };
 
 Zoom.prototype.reset = function() {
-    this.activeZoom = identity;
-    this.zooming = false;
-    this.update(this.activeZoom);
+    if (window.requestAnimationFrame) {
+        var Z = this.activeZoom;
+        var I = identity;
+        var startTime = null;
+
+        var avgVector = function(u, v, progress) {
+            var u1 = scmult(1 - progress, u);
+            var v1 = scmult(progress, v);
+            return vcadd(u1, v1);
+        }
+        var avgTransform = function(Z, I, progress) {
+            return [ [
+                avgVector(Z[0][0], I[0][0], progress), 
+                avgVector(Z[0][1], I[0][1], progress),
+            ],
+                avgVector(Z[1], I[1], progress)
+            ];
+        };
+        var me = this;
+        var step = function(time) {
+            if (!startTime) { 
+                startTime =  time;
+            }
+            var progress = (time - startTime)/100;
+            if (progress > 1) {
+                me.activeZoom = identity;
+                me.zooming = false;
+                me.update(me.activeZoom);
+            } else {
+                me.update(avgTransform(Z, I, progress));
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    } else {
+        this.activeZoom = identity;
+        this.zooming = false;
+        this.update(this.activeZoom);
+    }
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
 
