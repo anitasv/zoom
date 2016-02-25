@@ -1,5 +1,6 @@
 # zoom
-Javascript library to do pinch zoom that preserves scale and rotation correctly.
+Javascript library to do pinch zoom that preserves scale and rotation correctly. It has a jQuery dependency, but
+can be easily be removed.
 
 Pinch to zoom, rotate and translate. 
 Double Click to reset.
