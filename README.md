@@ -1,11 +1,10 @@
 # zoom
-Javascript library to do pinch zoom that preserves scale and rotation correctly. It has a jQuery dependency, but
-can be easily be removed.
-
+Javascript library to do pinch zoom that preserves scale and rotation correctly.
 Pinch to zoom, rotate and translate. 
+
 Double Click to reset.
 
-GZIP size of library is about 610 bytes.
+GZIP size of library is about 728 bytes.
 
 For a DEMO check this:
    http://anitasv.github.io/zoom.html
