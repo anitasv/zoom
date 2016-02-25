@@ -102,8 +102,8 @@ function Zoom(elem) {
     var me = this;
     var tapped = false;
 
-    elem.on('touchstart', function(evt) {
-        var t = evt.originalEvent.touches;
+    elem.addEventListener('touchstart', function(evt) {
+        var t = evt.touches;
         if (!t) {
             return false;
         }
@@ -123,8 +123,8 @@ function Zoom(elem) {
         }
     });
     
-    elem.on('touchmove', function(evt) {
-        var t = evt.originalEvent.touches;
+    elem.addEventListener('touchmove', function(evt) {
+        var t = evt.touches;
         if (!t || t.length != 2) {
             return false;
         }
@@ -139,7 +139,7 @@ function Zoom(elem) {
         me.update(finalT);
     });
 
-    elem.on('touchend', function(evt) {
+    elem.addEventListener('touchend', function(evt) {
         if (me.zooming) {
             me.activeZoom = cascade(me.currentZoom, me.activeZoom);
             me.zooming = false;
@@ -150,7 +150,7 @@ function Zoom(elem) {
 
 Zoom.prototype.update = function(finalT) {
     var str = cssMat(finalT);
-    this.elem.css('transform', str);
+    this.elem.style.transform = str;
 };
 
 Zoom.prototype.reset = function() {
