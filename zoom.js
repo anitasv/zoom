@@ -108,7 +108,7 @@ function Zoom(elem) {
             return false;
         }
         evt.preventDefault();
-        if (t.length == 2) {
+        if (t.length === 2) {
             me.srcCoords = getCoords(t);
             me.zooming = true;
         } else if (t.length == 1) {
