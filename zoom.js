@@ -62,12 +62,8 @@ var zoom = function(s, d) {
     var b = minus(d[1], d[0]);
     var rs = rotscale(a, b);
 
-    // Mid points.
-    var m1 = scmult(.5, vcadd(s[0], s[1]));
-    var m2 = scmult(.5, vcadd(d[0], d[1]));
- 
-    // Effective translation.
-    var t = minus(m2, m1);
+    var rs0 = apply(rs, s[0]);
+    var t = minus(d[0], rs0);
 
     return [rs, t];
 };
@@ -77,13 +73,6 @@ var cssMat = function(T) {
     var b = T[1];
     return 'matrix(' + A[0][0] + ',' + A[0][1] + ',' + A[1][0] + ',' + A[1][1] +
             ',' + b[0] + ',' + b[1] + ')';
-};
-
-var getCoords = function(t) {
-    return [ 
-        [t[0].pageX, t[0].pageY],
-        [t[1].pageX, t[1].pageY] 
-    ];
 };
 
 var identity = [ [ [ 1, 0], [0, 1]] , [0, 0] ];
@@ -101,6 +90,17 @@ function Zoom(elem) {
 
     var me = this;
     var tapped = false;
+
+    elem.style['transform-origin'] = "0 0";
+
+    var getCoords = function(t) {
+        var oX = elem.offsetLeft;
+        var oY = elem.offsetTop; 
+        return [ 
+            [t[0].pageX - oX, t[0].pageY - oY],
+            [t[1].pageX - oX, t[1].pageY - oY] 
+        ];
+    };
 
     elem.parentNode.addEventListener('touchstart', function(evt) {
         var t = evt.touches;
