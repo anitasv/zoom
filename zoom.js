@@ -91,7 +91,7 @@ function Zoom(elem) {
     var me = this;
     var tapped = false;
 
-    elem.style['transform-origin'] = "0 0";
+    elem.style['transform-origin'] = '0 0';
 
     var getCoords = function(t) {
         var oX = elem.offsetLeft;
@@ -139,13 +139,13 @@ function Zoom(elem) {
         me.update(finalT);
     });
 
-    elem.parentNode.addEventListener('touchend', function(evt) {
+    elem.parentNode.addEventListener('touchend', function() {
         if (me.zooming) {
             me.activeZoom = cascade(me.currentZoom, me.activeZoom);
             me.zooming = false;
         }
     });
-};
+}
 
 Zoom.prototype.update = function(finalT) {
     var str = cssMat(finalT);
@@ -162,7 +162,7 @@ Zoom.prototype.reset = function() {
             var u1 = scmult(1 - progress, u);
             var v1 = scmult(progress, v);
             return vcadd(u1, v1);
-        }
+        };
         var avgTransform = function(Z, I, progress) {
             return [ [
                 avgVector(Z[0][0], I[0][0], progress), 
