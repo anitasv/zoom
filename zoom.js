@@ -148,26 +148,31 @@ var rotscale = function(a, b) {
 };
 
 /**
- * Zoom is a similarity preserving transform from a pair of
- * positions vectors to a new pair of position vectors.
+ * Zoom is a similarity preserving transform from a pair of source
+ * points to a new pair of destination points.
  * 
- * @param {Array<number>} s source point.
- * @param {Array<number>} d destination point.
+ * @param {Array<Array<number>>} s two source points.
+ * @param {Array<Array<number>>} d two destination points.
  * 
  * @return {Transform} that moves point 's' to point 'd' 
  */ 
 var zoom = function(s, d) {
+    // Source vector.
     var a = minus(s[1], s[0]);
+    // Destination vector.
     var b = minus(d[1], d[0]);
+    // Rotation needed for source to dest vector.
     var rs = rotscale(a, b);
 
+    // Position of s[0] if rotation is applied.
     var rs0 = apply(rs, s[0]);
+    // Since d[0] = rs0 + t
     var t = minus(d[0], rs0);
 
-    return [rs, t];
+    return new Transform(rs, t);
 };
 
-var identity = [ [ [ 1, 0], [0, 1]] , [0, 0] ];
+var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
 
 /**
  * @constructor
@@ -241,29 +246,14 @@ function Zoom(elem) {
 }
 
 Zoom.prototype.update = function(finalT) {
-    var str = cssMat(finalT);
-    this.elem.style.transform = str;
+    this.elem.style.transform = finalT.css();
 };
 
 Zoom.prototype.reset = function() {
     if (window.requestAnimationFrame) {
         var Z = this.activeZoom;
-        var I = identity;
         var startTime = null;
 
-        var avgVector = function(u, v, progress) {
-            var u1 = scmult(1 - progress, u);
-            var v1 = scmult(progress, v);
-            return vcadd(u1, v1);
-        };
-        var avgTransform = function(Z, I, progress) {
-            return [ [
-                avgVector(Z[0][0], I[0][0], progress), 
-                avgVector(Z[0][1], I[0][1], progress),
-            ],
-                avgVector(Z[1], I[1], progress)
-            ];
-        };
         var me = this;
         var step = function(time) {
             if (!startTime) { 
@@ -275,7 +265,7 @@ Zoom.prototype.reset = function() {
                 me.zooming = false;
                 me.update(me.activeZoom);
             } else {
-                me.update(avgTransform(Z, I, progress));
+                me.update(avgTransform(Z, identity, progress));
                 window.requestAnimationFrame(step);
             }
         };
