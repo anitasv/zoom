@@ -2,52 +2,144 @@
 // Type Vector is [ x, y ]
 // Type Transform is [ Matrix, Vector ]
 
-// Multiply Scalar with Vector returns a Vector.
+/**
+ * Multiply Scalar with Vector returns a Vector.
+ * 
+ * @param {number} l scalar to multiply with
+ * @param {Array<number>} x 2D vector.
+ * @return {Array<number>}
+ */
 var scmult = function(l, x) {
     return [ l * x[0], l * x[1] ];
 };
 
-// Adding two vectors is another vector.
+/**
+ * Adding two vectors is another vector.
+ * 
+ * @param {Array<number>} a 2D vector.
+ * @param {Array<number>} b 2D vector.
+ * @return {Array<number>} Sum vector.
+ */
 var vcadd = function(a, b) {
     return [ a[0] + b[0], a[1] + b[1] ];
 };
 
-// Subtracting two vectors is another vector.
+/**
+ * Subtracting two vectors is another vector.
+ * 
+ * @param {Array<number>} a 2D vector.
+ * @param {Array<number>} b 2D vector.
+ * @return {Array<number>} Difference vector.
+ */
 var minus = function(a, b) {
     return [ a[0] - b[0], a[1] - b[1] ];
 };
 
-// Dot product of two vectors is a scalar.
+/**
+ * Dot product of two vectors is scalar.
+ * 
+ * @param {Array<number>} a 2D vector.
+ * @param {Array<number>} b 2D vector.
+ * @return {number} scalar inner product.
+ */
 var dot = function(a, b) {
     return a[0] * b[0] + a[1] * b[1];
 };
 
-// Exterior Product of two vectors is a pseudoscalar.
+/**
+ * Exterior Product of two vectors is a pseudoscalar.
+ * 
+ * @param {Array<number>} a 2D vector.
+ * @param {Array<number>} b 2D vector.
+ * @return {number} psuedo-scalar exterior product.
+ */
 var wedge = function(a, b) {
     return a[0] * b[1] - a[1] * b[0];
 };
 
-// Apply Matrix on Vector returns a Vector.
+/**
+ * Apply Matrix on Vector returns a Vector.
+ * 
+ * @param {Array<Array<number>>} A 2x2 Matrix
+ * @param {Array<number>} x 2D vector.
+ * @return {Array<number>} 2D vector linear product.
+ */
 var apply = function(A, x) {
     return vcadd(scmult(x[0], A[0]), scmult(x[1], A[1]));
 };
 
-// Multiply two matrices.
+/**
+ * Multiply two matrices.
+ * 
+ * @param {Array<Array<number>>} A 2x2 Matrix
+ * @param {Array<Array<number>>} B 2x2 Matrix
+ * @return {Array<Array<number>>} A 2x2 Matrix
+ */
 var mult = function(A, B) {
     return [ apply(A, B[0]), apply(A, B[1]) ];
 };
 
-// Multiply two transforms.
-var cascade = function(T, U) {
-    return [ mult(T[0], U[0]), vcadd(apply(T[0], U[1]), T[1]) ];
+/**
+ * Represents a transform operation, Ax + b
+ * 
+ * @constructor
+ * 
+ * @param {Array<Array<number>>} A 2x2 Matrix.
+ * @param {Array<number>} b 2D scalar.
+ */
+function Transform(A, b) {
+    this.A = A;
+    this.b = b;
+}
+
+/**
+ * Given CSS Transform representation of the class.
+ * @return {string} CSS 2D Transform. 
+ */
+Transform.prototype.css = function() {
+    var A = this.A;
+    var b = this.b;
+    return 'matrix(' + A[0][0] + ',' + A[0][1] + ',' + A[1][0] + ',' + A[1][1] +
+            ',' + b[0] + ',' + b[1] + ')';
 };
 
-// Rotation matrix.
+/**
+ * Multiply two transforms. 
+ * Defined as 
+ *  (T o U) (x) = T(U(x))
+ * 
+ * Derivation:
+ *  T(U(x)) 
+ *   = T(U.A(x) + U.b) 
+ *   = T.A(U.A(x) + U.b)) + T.b
+ *   = T.A(U.A(x)) + T.A(U.b) + T.b 
+ * 
+ * @param {Transform} T 
+ * @param {Transform} U 
+ * @return {Transform} T o U
+ */
+var cascade = function(T, U) {
+    return new Transform(mult(T.A, U.A), vcadd(apply(T.A, U.b), T.b));
+};
+
+/**
+ * Creates the default rotation matrix
+ * 
+ * @param {number} c x-projection (r cos(theta))
+ * @param {number} s y-projection (r sin(theta))
+ * @return {Array<Array<number>>} Rotation matrix.
+ */
 var rotate = function(c, s) {
     return [ [ c, s], [-s, c] ];
 };
 
-// Rotate + Scale from a to b.
+/**
+ * Returns matrix that transforms vector a to vector b.
+ * 
+ * @param {Array<number>} a 2D vector.
+ * @param {Array<number>} b 2D vector.
+ * @return {Array<Array<number>>} Rotation + Scale matrix
+ */
 var rotscale = function(a, b) {
     var alen = dot(a, a);
     var sig = dot(a, b);
@@ -55,8 +147,15 @@ var rotscale = function(a, b) {
     return rotate( sig / alen, del / alen);
 };
 
-// Zoom is a similarity preserving transform from a pair of
-// positions vectors to a new pair of position vectors. 
+/**
+ * Zoom is a similarity preserving transform from a pair of
+ * positions vectors to a new pair of position vectors.
+ * 
+ * @param {Array<number>} s source point.
+ * @param {Array<number>} d destination point.
+ * 
+ * @return {Transform} that moves point 's' to point 'd' 
+ */ 
 var zoom = function(s, d) {
     var a = minus(s[1], s[0]);
     var b = minus(d[1], d[0]);
@@ -68,18 +167,12 @@ var zoom = function(s, d) {
     return [rs, t];
 };
 
-var cssMat = function(T) {
-    var A = T[0];
-    var b = T[1];
-    return 'matrix(' + A[0][0] + ',' + A[0][1] + ',' + A[1][0] + ',' + A[1][1] +
-            ',' + b[0] + ',' + b[1] + ')';
-};
-
 var identity = [ [ [ 1, 0], [0, 1]] , [0, 0] ];
 
 /**
  * @constructor
  * @export
+ * @param {Element} elem to attach zoom handler.
  */
 function Zoom(elem) {
     this.elem = elem;
