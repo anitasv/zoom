@@ -194,7 +194,7 @@ var avgVector = function(u, v, progress) {
  * @param {number} progress (from 0 to 1)
  * @return {Array<Array<number>>} (1-p) A + (p) B 
  */
-var avgMatrix = function(u, v, progress) {
+var avgMatrix = function(A, B, progress) {
     return [ avgVector(A[0], B[0], progress),  avgVector(A[1], B[1], progress) ];
 };
 
