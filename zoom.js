@@ -172,6 +172,44 @@ var zoom = function(s, d) {
     return new Transform(rs, t);
 };
 
+/**
+ * Weighted average of two vectors.
+ * 
+ * @param {Array<number>} u 2D vector.
+ * @param {Array<number>} v 2D vector.
+ * @param {number} progress (from 0 to 1)
+ * @return {Array<number>} (1-p) u + (p) v 
+ */
+var avgVector = function(u, v, progress) {
+    var u1 = scmult(1 - progress, u);
+    var v1 = scmult(progress, v);
+    return vcadd(u1, v1);
+};
+
+/**
+ * Weighted average of two vectors.
+ * 
+ * @return {Array<Array<number>>} A 2D matrix.
+ * @return {Array<Array<number>>} B 2D matrix.
+ * @param {number} progress (from 0 to 1)
+ * @return {Array<Array<number>>} (1-p) A + (p) B 
+ */
+var avgMatrix = function(u, v, progress) {
+    return [ avgVector(A[0], B[0], progress),  avgVector(A[1], B[1], progress) ];
+};
+
+
+/**
+ * Weighted average of two transforms.
+ * @param {Transform} Z Source Transform
+ * @param {Transform} I Destination Transform
+ * @param {number} progress (from 0 to 1)
+ * @return {Transform} (1-p) Z + (p) I 
+ */
+Transform.avg = function(Z, I, progress) {
+    return new Transform(avgMatrix(Z.A, I.A, progress), avgVector(Z.b, I.b, progress));
+};
+
 var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
 
 /**
@@ -255,20 +293,6 @@ Zoom.prototype.reset = function() {
         var startTime = null;
 
         var me = this;
-        
-        var avgVector = function(u, v, progress) {
-            var u1 = scmult(1 - progress, u);
-            var v1 = scmult(progress, v);
-            return vcadd(u1, v1);
-        };
-        var avgTransform = function(Z, I, progress) {
-            return [ [
-                avgVector(Z[0][0], I[0][0], progress), 
-                avgVector(Z[0][1], I[0][1], progress),
-            ],
-                avgVector(Z[1], I[1], progress)
-            ];
-        };
 
         var step = function(time) {
             if (!startTime) { 
@@ -280,7 +304,7 @@ Zoom.prototype.reset = function() {
                 me.zooming = false;
                 me.update(me.activeZoom);
             } else {
-                me.update(avgTransform(Z, identity, progress));
+                me.update(Transform.avg(Z, identity, progress));
                 window.requestAnimationFrame(step);
             }
         };
