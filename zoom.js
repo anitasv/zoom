@@ -255,6 +255,21 @@ Zoom.prototype.reset = function() {
         var startTime = null;
 
         var me = this;
+        
+        var avgVector = function(u, v, progress) {
+            var u1 = scmult(1 - progress, u);
+            var v1 = scmult(progress, v);
+            return vcadd(u1, v1);
+        };
+        var avgTransform = function(Z, I, progress) {
+            return [ [
+                avgVector(Z[0][0], I[0][0], progress), 
+                avgVector(Z[0][1], I[0][1], progress),
+            ],
+                avgVector(Z[1], I[1], progress)
+            ];
+        };
+
         var step = function(time) {
             if (!startTime) { 
                 startTime =  time;
