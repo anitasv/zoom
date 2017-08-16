@@ -15,10 +15,12 @@ For an explanation of math see
 # Usage
 
 ```html
-<div class="container">
+<div>
     <img id="torotate">
 </div>
 ```
+The container can decide to hide overflow if need like in the demo.
+
 ```js
 var elem = document.getElementById('torotate');
 var zm = new Zoom(elem, {
@@ -26,5 +28,6 @@ var zm = new Zoom(elem, {
     rotate: true
 });
 
-// you can do operations like zm.reset() on this object.
 ```
+You can do operations like zm.reset() on this object, by default it attaches listeners to the object given.
+
