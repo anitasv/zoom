@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    </head>
+    <body>
+        <p> Two fingers to zoom, rotate, and move </p>
+        <p> Double Click to reset </p>
+        <div width=320 height=240 style="overflow:hidden;">
+            <img id="mysenn" width=320 height=240 src="https://lh3.googleusercontent.com/w33i78Rt0j4GHr7SA1luYtBAtmC1DmRHwobUcK1wCKivA_u4VczsDw0CweLmJpUwFRUs=w1920-h1200-no">
+        </div>
+        <p> Single finger is for pan (experimental).</p>
+        <p>Get it here in branch pan_support</p>
+        <a href="https://github.com/anitasv/zoom">https://github.com/anitasv/zoom</a>
+        <script type="text/javascript" src="zoom_rot.min.js"> </script>
+        <script type="text/javascript"> 
+            var zm = new Zoom(document.getElementById('mysenn'), {
+			    	pan: true,
+				rotate: false
+			    });
+        </script>
+    </body>
+</html>
