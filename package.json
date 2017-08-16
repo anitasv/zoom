@@ -1,6 +1,6 @@
 {
   "name": "zoom-it",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Allows to pinch zoom, rotate, pan any HTML element.",
   "main": "zoom.js",
   "scripts": {
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/anitasv/zoom#readme",
   "files": [
     "zoom.js",
+    "zoom.min.js",
     "README.md"
   ]
 }
