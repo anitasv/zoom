@@ -179,7 +179,7 @@ var zoom = function(s, d, rotate) {
     // Since d[0] = rs0 + t
     var t = minus(d[0], rs0);
 
-    return new Transform(js, t);
+    return new Transform(rs, t);
 };
 
 /**
