@@ -39,11 +39,12 @@ If you are using NPM (https://www.npmjs.com/package/zoom-it), then
 
 ```js
 var zoom = require("zoom-it");
+var wnd = window; // Get this.
 
 var elem = document.getElementById('torotate');
 var zm = new zoom.Zoom(elem, {
     pan: true,
     rotate: true
-});
+}, wnd);
 
 ```
