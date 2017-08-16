@@ -147,6 +147,13 @@ var rotscale = function(a, b) {
     return rotate( sig / alen, del / alen);
 };
 
+var justscale = function(a, b) {
+    var alen = Math.sqrt(dot(a, a));
+    var blen = Math.sqrt(dot(b, b));
+    var scale = blen / alen;
+    return rotate(scale, 0)
+};
+
 /**
  * Zoom is a similarity preserving transform from a pair of source
  * points to a new pair of destination points.
@@ -163,13 +170,14 @@ var zoom = function(s, d) {
     var b = minus(d[1], d[0]);
     // Rotation needed for source to dest vector.
     var rs = rotscale(a, b);
+    var js = justscale(a, b);
 
     // Position of s[0] if rotation is applied.
     var rs0 = apply(rs, s[0]);
     // Since d[0] = rs0 + t
     var t = minus(d[0], rs0);
 
-    return new Transform(rs, t);
+    return new Transform(js, t);
 };
 
 /**
