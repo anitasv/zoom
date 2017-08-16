@@ -1,0 +1,29 @@
+{
+  "name": "zoom-it",
+  "version": "1.0.0",
+  "description": "Allows to pinch zoom, rotate, pan any HTML element.",
+  "main": "zoom.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anitasv/zoom.git"
+  },
+  "keywords": [
+    "zoom",
+    "pinch",
+    "rotate",
+    "pan"
+  ],
+  "author": "Anita SV <anitasvasu@gmail.com> (https://github.com/anitasv/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anitasv/zoom/issues"
+  },
+  "homepage": "https://github.com/anitasv/zoom#readme",
+  "files": [
+    "zoom.js",
+    "README.md"
+  ]
+}

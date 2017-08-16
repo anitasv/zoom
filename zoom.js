@@ -223,6 +223,17 @@ Transform.avg = function(Z, I, progress) {
 var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
 
 /**
+ * Gives a default value for an input object.
+ * 
+ * @param {Object} param input parameter, may be undefined
+ * @param {Object} val returned if param is undefined.
+ * @return {Object}
+ */
+var defaults = function(param, val) {
+    return (param == undefined) ? val : param;
+};
+
+/**
  * Method to override json config objects with default
  * values. If undefined in cfg corresponding value from
  * cfg_def will be picked.
@@ -232,10 +243,6 @@ var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
  * @return {Object} new config
  */
 var default_config = function(cfg, cfg_def) {
-    var defaults = function(param, val) {
-        return (param == undefined) ? val : param;
-    }
-    
     var new_cfg = defaults(cfg, {})
     for (k in cfg_def) {
         new_cfg[k] = defaults(new_cfg[k], cfg_def[k])
@@ -248,9 +255,8 @@ var default_config = function(cfg, cfg_def) {
  * @export
  * @param {Element} elem to attach zoom handler.
  * @param {Object} config to specify additiona features.
- *      
  */
-function Zoom(elem, config) {
+function Zoom(elem, config, wnd) {
     this.elem = elem;
     this.zooming = false;
     this.activeZoom = identity;
@@ -263,7 +269,9 @@ function Zoom(elem, config) {
     this.config = default_config(config, {
         "pan" : false,
         "rotate" : true
-    })
+    });
+
+    this.wnd = wnd || window;
 
     elem.style['transform-origin'] = '0 0';
 
@@ -345,7 +353,7 @@ Zoom.prototype.update = function(finalT) {
 };
 
 Zoom.prototype.reset = function() {
-    if (window.requestAnimationFrame) {
+    if (this.wnd.requestAnimationFrame) {
         var Z = this.activeZoom;
         var startTime = null;
 
@@ -362,10 +370,10 @@ Zoom.prototype.reset = function() {
                 me.update(me.activeZoom);
             } else {
                 me.update(Transform.avg(Z, identity, progress));
-                window.requestAnimationFrame(step);
+                this.wnd.requestAnimationFrame(step);
             }
         };
-        window.requestAnimationFrame(step);
+        this.wnd.requestAnimationFrame(step);
     } else {
         this.activeZoom = identity;
         this.zooming = false;
@@ -374,4 +382,5 @@ Zoom.prototype.reset = function() {
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
 
-window['Zoom'] = Zoom;
+exports = exports || window
+exports['Zoom'] = Zoom
