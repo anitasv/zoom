@@ -169,11 +169,10 @@ var zoom = function(s, d) {
     // Destination vector.
     var b = minus(d[1], d[0]);
     // Rotation needed for source to dest vector.
-    var rs = rotscale(a, b);
     var js = justscale(a, b);
 
     // Position of s[0] if rotation is applied.
-    var rs0 = apply(rs, s[0]);
+    var rs0 = apply(js, s[0]);
     // Since d[0] = rs0 + t
     var t = minus(d[0], rs0);
 
