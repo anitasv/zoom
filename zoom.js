@@ -305,7 +305,9 @@ function Zoom(elem, config) {
                 tapped = setTimeout(function() {
                     tapped = false;
                 }, 300);
-                me.zooming = true;
+                if (me.config.pan) {
+                    me.zooming = true;
+                }
             } else {
                 me.zooming = false;                
                 tapped = false;
@@ -318,11 +320,6 @@ function Zoom(elem, config) {
         var t = evt.touches;
         if (!t) {
             return false;
-        }
-        if (t.length == 1) {
-            if (!me.config.pan) {
-                return false;
-            }
         }
         if (!me.zooming) {
             // To prevent possible potential reorder of events.
