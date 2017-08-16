@@ -213,6 +213,27 @@ Transform.avg = function(Z, I, progress) {
 var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
 
 /**
+ * Method to override json config objects with default
+ * values. If undefined in cfg corresponding value from
+ * cfg_def will be picked.
+ * 
+ * @param {Object} cfg input parameter config.
+ * @param {Object} cfg_def default fallbacks.
+ * @return {Object} new config
+ */
+var default_config = function(cfg, cfg_def) {
+    var defaults = function(param, val) {
+        return (param == undefined) ? val : param;
+    }
+    
+    var new_cfg = defaults(cfg, {})
+    for (k in cfg_def) {
+        new_cfg[k] = defaults(new_cfg[k], cfg_def[k])
+    }
+    return new_cfg
+};
+
+/**
  * @constructor
  * @export
  * @param {Element} elem to attach zoom handler.
@@ -229,8 +250,10 @@ function Zoom(elem, config) {
     var me = this;
     var tapped = false;
 
-    config = config || {}
-    config.pan = config.pan || true
+    this.config = default_config(config, {
+        "pan" : false,
+        "rotate" : true
+    })
 
     elem.style['transform-origin'] = '0 0';
 
