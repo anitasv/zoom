@@ -14,7 +14,9 @@
         <a href="https://github.com/anitasv/zoom">https://github.com/anitasv/zoom</a>
         <script type="text/javascript" src="zoom_pan.min.js"> </script>
         <script type="text/javascript"> 
-            var zm = new Zoom(document.getElementById('mysenn'));
+            var zm = new Zoom(document.getElementById('mysenn'), {
+			    	pan: true
+			    });
         </script>
     </body>
 </html>
