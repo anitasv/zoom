@@ -216,8 +216,10 @@ var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
  * @constructor
  * @export
  * @param {Element} elem to attach zoom handler.
+ * @param {Object} config to specify additiona features.
+ *      
  */
-function Zoom(elem) {
+function Zoom(elem, config) {
     this.elem = elem;
     this.zooming = false;
     this.activeZoom = identity;
@@ -227,9 +229,12 @@ function Zoom(elem) {
     var me = this;
     var tapped = false;
 
+    config = config || {}
+    config.pan = config.pan || true
+
     elem.style['transform-origin'] = '0 0';
 
-    var getCoords = function(t) {
+    var getCoordsDouble = function(t) {
         var oX = elem.offsetLeft;
         var oY = elem.offsetTop; 
         return [ 
@@ -238,21 +243,38 @@ function Zoom(elem) {
         ];
     };
 
+    var getCoordsSingle = function(t) {
+        var oX = elem.offsetLeft;
+        var oY = elem.offsetTop; 
+        var x = t[0].pageX - oX;
+        var y = t[0].pageY - oY;
+        return [ 
+            [x, y],
+            [x + 1, y + 1] 
+        ];
+    };
+
+    var getCoords = function(t) {
+        return t.length > 1 ? getCoordsDouble(t) : getCoordsSingle(t);
+    };
+
     elem.parentNode.addEventListener('touchstart', function(evt) {
         var t = evt.touches;
         if (!t) {
             return false;
         }
         evt.preventDefault();
+        me.srcCoords = getCoords(t);
         if (t.length === 2) {
-            me.srcCoords = getCoords(t);
             me.zooming = true;
         } else if (t.length == 1) {
             if (!tapped) {
                 tapped = setTimeout(function() {
                     tapped = false;
                 }, 300);
+                me.zooming = true;
             } else {
+                me.zooming = false;                
                 tapped = false;
                 me.reset();
             }
@@ -261,8 +283,13 @@ function Zoom(elem) {
     
     elem.parentNode.addEventListener('touchmove', function(evt) {
         var t = evt.touches;
-        if (!t || t.length != 2) {
+        if (!t) {
             return false;
+        }
+        if (t.length == 1) {
+            if (!me.config.pan) {
+                return false;
+            }
         }
         if (!me.zooming) {
             // To prevent possible potential reorder of events.

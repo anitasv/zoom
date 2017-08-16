@@ -4,7 +4,7 @@ Pinch to zoom, rotate and translate.
 
 Double Click to reset.
 
-GZIP size of library is about 788 bytes.
+Library size is 845 bytes (after gzip), 1926 bytes (before gzip)
 
 For a DEMO check this:
     http://anitasv.github.io/zoom/
