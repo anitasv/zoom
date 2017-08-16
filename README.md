@@ -11,3 +11,20 @@ For a DEMO check this:
 
 For an explanation of math see
     https://github.com/anitasv/zoom/wiki/Explaining-Math
+
+# Usage
+
+```html
+<div class="container">
+    <img id="torotate">
+</div>
+```
+```js
+var elem = document.getElementById('torotate');
+var zm = new Zoom(elem, {
+    pan: true,
+    rotate: true
+});
+
+// you can do operations like zm.reset() on this object.
+```
