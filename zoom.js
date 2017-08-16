@@ -156,23 +156,26 @@ var justscale = function(a, b) {
 
 /**
  * Zoom is a similarity preserving transform from a pair of source
- * points to a new pair of destination points.
+ * points to a new pair of destination points. If rotate it is false
+ * then it won't be maintaining the transfer precisely, but will only
+ * do scaling part of it.
  * 
  * @param {Array<Array<number>>} s two source points.
  * @param {Array<Array<number>>} d two destination points.
+ * @param {Boolean} rotate true - rotate; else scale.
  * 
  * @return {Transform} that moves point 's' to point 'd' 
  */ 
-var zoom = function(s, d) {
+var zoom = function(s, d, rotate) {
     // Source vector.
     var a = minus(s[1], s[0]);
     // Destination vector.
     var b = minus(d[1], d[0]);
     // Rotation needed for source to dest vector.
-    var js = justscale(a, b);
+    var rs = rotate ? rotscale(a, b) : justscale(a, b);
 
     // Position of s[0] if rotation is applied.
-    var rs0 = apply(js, s[0]);
+    var rs0 = apply(rs, s[0]);
     // Since d[0] = rs0 + t
     var t = minus(d[0], rs0);
 
@@ -327,7 +330,7 @@ function Zoom(elem, config) {
         }
         evt.preventDefault();
         var destCoords = getCoords(t);
-        me.currentZoom = zoom(me.srcCoords, destCoords);
+        me.currentZoom = zoom(me.srcCoords, destCoords, me.config.rotate);
         var finalT = cascade(me.currentZoom, me.activeZoom);
         me.update(finalT);
     });
