@@ -402,5 +402,5 @@ Zoom.prototype.reset = function() {
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
 
-exports = exports || window
-exports['Zoom'] = Zoom
+var ex = exports || window
+ex['Zoom'] = Zoom
