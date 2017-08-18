@@ -1,29 +1,32 @@
 # zoom
-Javascript library to do pinch zoom that preserves scale and rotation correctly.
-Pinch to zoom, rotate and translate. 
+Supports zoom, rotate, and pan operations on chosen element. Requires touch support, which means may not work on IE. Supports configuration to disable pan and rotate.
 
-Double Click to reset.
+For a DEMO open this on mobile:
+    http://anitasv.github.io/zoom/
 
-Library size is 956 bytes (after gzip), 2106 bytes (before gzip)
+Library size is 1024 bytes (after gzip), 2137 bytes (before gzip)
 
 Minified: http://anitasv.github.io/zoom/zoom-1.0.4.min.js
 
 Unminified (for debugging purposes): http://anitasv.github.io/zoom/zoom-1.0.4.js
 
-For a DEMO check this:
-    http://anitasv.github.io/zoom/
-
 For an explanation of math see
     https://github.com/anitasv/zoom/wiki/Explaining-Math
+
+Send pull requests, bug reports, and feature requests to https://github.com/anitasv/zoom/
 
 # Usage
 
 ```html
-<div>
-    <img id="torotate">
+<div width=320 height=240 style="overflow:hidden;">
+    <!-- this doesn't have to be an immage -->
+    <img id="torotate" width=320 height=240 src="https://lh3.googleusercontent.com/w33i78Rt0j4GHr7SA1luYtBAtmC1DmRHwobUcK1wCKivA_u4VczsDw0CweLmJpUwFRUs=w1920-h1200-no">
 </div>
+
+<script type="text/javascript" src="http://anitasv.github.io/zoom/zoom-1.0.4.min.js"> </script>
 ```
-The container can decide to hide overflow if need like in the demo.
+
+The overflow:hidden is to crop the image moving outside the original border. Be creative. Hotlinking to github.io may get you blocked; so copy to your own location.
 
 ```js
 var elem = document.getElementById('torotate');
