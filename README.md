@@ -3,11 +3,11 @@ Allows your users to zoom, rotate, and pan images using touch gestures.
 
 For a DEMO open this on mobile: http://anitasv.github.io/zoom/
 
-Library size is 1024 bytes (after gzip), 2137 bytes (before gzip)
-
-Minified: http://anitasv.github.io/zoom/zoom-1.0.4.min.js
-
-Unminified (for debugging purposes): http://anitasv.github.io/zoom/zoom-1.0.4.js
+Type| Link | Size
+-|-|-
+Minified | http://anitasv.github.io/zoom/zoom-1.0.4.min.js | 1024 bytes
+Debugging | http://anitasv.github.io/zoom/zoom-1.0.4.js | 2136 bytes
+NPM | https://www.npmjs.com/package/zoom-it | 
 
 For an explanation of math see https://github.com/anitasv/zoom/wiki/Explaining-Math
 
@@ -36,7 +36,7 @@ var zm = new Zoom(elem, {
 ```
 You can do operations like zm.reset() on this object, by default it attaches listeners to the object given.
 
-If you are using NPM (https://www.npmjs.com/package/zoom-it), then
+If you are using NPM, then
 
 ```js
 var zoom = require("zoom-it");
