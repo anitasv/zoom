@@ -1,7 +1,8 @@
-# zoom
-Supports zoom, rotate, and pan operations on chosen element. Requires touch support, which means may not work on IE. Supports configuration to disable pan and rotate.
+# Zoom it!
+Allows your users to zoom, rotate, and pan images using touch gestures.
 
 For a DEMO open this on mobile:
+
     http://anitasv.github.io/zoom/
 
 Library size is 1024 bytes (after gzip), 2137 bytes (before gzip)
@@ -11,15 +12,18 @@ Minified: http://anitasv.github.io/zoom/zoom-1.0.4.min.js
 Unminified (for debugging purposes): http://anitasv.github.io/zoom/zoom-1.0.4.js
 
 For an explanation of math see
+
     https://github.com/anitasv/zoom/wiki/Explaining-Math
 
-Send pull requests, bug reports, and feature requests to https://github.com/anitasv/zoom/
+Send pull requests, bug reports, and feature requests to 
+
+https://github.com/anitasv/zoom/
 
 # Usage
 
 ```html
 <div width=320 height=240 style="overflow:hidden;">
-    <!-- this doesn't have to be an immage -->
+    <!-- this doesn't have to be an image -->
     <img id="torotate" width=320 height=240 src="https://lh3.googleusercontent.com/w33i78Rt0j4GHr7SA1luYtBAtmC1DmRHwobUcK1wCKivA_u4VczsDw0CweLmJpUwFRUs=w1920-h1200-no">
 </div>
 
