@@ -12,13 +12,7 @@
         <p> Single finger is for page scroll.</p>
         <p>Get it here</p>
         <a href="https://github.com/anitasv/zoom">https://github.com/anitasv/zoom</a>
-        <script type="text/javascript" >
-                function l(b,a){return[b*a[0],b*a[1]]}function m(b,a){return[b[0]+a[0],b[1]+a[1]]}function n(b,a){return[b[0]-a[0],b[1]-a[1]]}function p(b,a){return b[0]*a[0]+b[1]*a[1]}function t(b,a){return m(l(a[0],b[0]),l(a[1],b[1]))}function u(b,a){this.c=b;this.g=a}var v=new u([[1,0],[0,1]],[0,0]);function w(b){var a={pan:!1,rotate:!0},c={};b=void 0==b?c:b;for(k in a)c=b[k],b[k]=void 0==c?a[k]:c;return b}
-        function x(b,a,c){function q(a){var r=a[0].pageX-b.offsetLeft;a=a[0].pageY-b.offsetTop;return[[r,a],[r+1,a+1]]}function f(a){var r=b.offsetLeft,d=b.offsetTop;return[[a[0].pageX-r,a[0].pageY-d],[a[1].pageX-r,a[1].pageY-d]]}this.m=b;this.b=!1;this.a=this.f=v;this.l=[0,0];var e=this,h=!1;this.j=w(a);this.h=c||window;b.style["transform-origin"]="0 0";b.parentNode.addEventListener("touchstart",function(a){var b=a.touches;if(!b)return!1;var d=!1;2===b.length?e.b=!0:1===b.length&&(h?(h=!1,d=!0):(h=!0,e.h.setTimeout(function(){h=
-        !1},300),e.j.pan&&(e.b=!0)));(e.b||h||d)&&a.preventDefault();e.b&&(e.l=1<b.length?f(b):q(b));d&&e.i()});b.parentNode.addEventListener("touchmove",function(b){var a=b.touches;if(!a||!e.b)return!1;b.preventDefault();b=e.l;var a=1<a.length?f(a):q(a),d=n(b[1],b[0]),c=n(a[1],a[0]),g;if(e.j.rotate){var h=p(d,d);g=p(d,c)/h;d=(d[0]*c[1]-d[1]*c[0])/h;g=[[g,d],[-d,g]]}else g=Math.sqrt(p(c,c))/Math.sqrt(p(d,d)),g=[[g,0],[-0,g]];d=g;g=e.f;b=new u(d,n(a[0],t(d,b[0])));a=g.c;d=b.c;e.a=new u([t(a,d[0]),t(a,d[1])],
-        m(t(g.c,b.g),g.g));y(e)});b.parentNode.addEventListener("touchend",function(){e.b&&(e.b=!1,e.f=e.a,evt.preventDefault())})}function y(b){var a=b.a,c=a.c,a=a.g;b.m.style.transform="matrix("+c[0][0]+","+c[0][1]+","+c[1][0]+","+c[1][1]+","+a[0]+","+a[1]+")"}
-        x.prototype.i=function(){if(this.h.requestAnimationFrame){var b=this.f,a=null,c=this,q=function(f){a||(a=f);f=(f-a)/100;if(1<=f)c.a=v,c.f=c.a,y(c);else{var e=b.c,h=v.c;c.a=new u([m(l(1-f,e[0]),l(f,h[0])),m(l(1-f,e[1]),l(f,h[1]))],m(l(1-f,b.g),l(f,v.g)));c.f=c.a;y(c);this.h.requestAnimationFrame(q)}};this.h.requestAnimationFrame(q)}else this.f=this.a=v,y(this)};x.prototype.reset=x.prototype.i;void 0==exports?window.Zoom=x:exports.Zoom=x;
-
+        <script type="text/javascript" src="zoom-1.0.3.js" >
         </script>
         <script type="text/javascript"> 
             var zm = new Zoom(document.getElementById('mysenn'), {
