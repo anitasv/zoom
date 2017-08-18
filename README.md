@@ -5,8 +5,8 @@ For a DEMO open this on mobile: http://anitasv.github.io/zoom/
 
 Type| Link | Size
 -|-|-
-Minified | http://anitasv.github.io/zoom/zoom-1.0.4.min.js | 1024 bytes
-Debugging | http://anitasv.github.io/zoom/zoom-1.0.4.js | 2136 bytes
+Minified | http://anitasv.github.io/zoom/zoom-1.0.4.min.js | 2136 bytes (gzip: 1024 bytes)
+Debugging | http://anitasv.github.io/zoom/zoom-1.0.4.js | 10334 bytes
 NPM | https://www.npmjs.com/package/zoom-it | 
 
 For an explanation of math see https://github.com/anitasv/zoom/wiki/Explaining-Math
