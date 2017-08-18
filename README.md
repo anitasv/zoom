@@ -1,9 +1,7 @@
 # Zoom it!
 Allows your users to zoom, rotate, and pan images using touch gestures.
 
-For a DEMO open this on mobile:
-
-    http://anitasv.github.io/zoom/
+For a DEMO open this on mobile: http://anitasv.github.io/zoom/
 
 Library size is 1024 bytes (after gzip), 2137 bytes (before gzip)
 
@@ -11,13 +9,9 @@ Minified: http://anitasv.github.io/zoom/zoom-1.0.4.min.js
 
 Unminified (for debugging purposes): http://anitasv.github.io/zoom/zoom-1.0.4.js
 
-For an explanation of math see
+For an explanation of math see https://github.com/anitasv/zoom/wiki/Explaining-Math
 
-    https://github.com/anitasv/zoom/wiki/Explaining-Math
-
-Send pull requests, bug reports, and feature requests to 
-
-https://github.com/anitasv/zoom/
+Send pull requests, bug reports, and feature requests to https://github.com/anitasv/zoom/
 
 # Usage
 
