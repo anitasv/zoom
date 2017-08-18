@@ -1,6 +1,6 @@
 {
   "name": "zoom-it",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Allows to pinch zoom, rotate, pan any HTML element.",
   "main": "zoom.js",
   "scripts": {
