@@ -358,7 +358,7 @@ function Zoom(elem, config, wnd) {
 }
 
 Zoom.prototype.previewZoom = function(additionalZoom) {
-    this.resultantZoom = cascade(this.activeZoom, additionalZoom);
+    this.resultantZoom = cascade(additionalZoom, this.activeZoom);
     this.repaint();
 };
 
