@@ -6,9 +6,9 @@ Double Click to reset.
 
 Library size is 956 bytes (after gzip), 2106 bytes (before gzip)
 
-Minified: http://anitasv.github.io/zoom/zoom-1.0.0.min.js
+Minified: http://anitasv.github.io/zoom/zoom-1.0.3.min.js
 
-Unminified (for debugging purposes): http://anitasv.github.io/zoom/zoom-1.0.0.js
+Unminified (for debugging purposes): http://anitasv.github.io/zoom/zoom-1.0.3.js
 
 For a DEMO check this:
     http://anitasv.github.io/zoom/
