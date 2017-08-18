@@ -348,7 +348,7 @@ function Zoom(elem, config, wnd) {
         me.previewZoom(additionalZoom);
     });
 
-    elem.parentNode.addEventListener('touchend', function() {
+    elem.parentNode.addEventListener('touchend', function(evt) {
         if (me.zooming) {
             me.zooming = false;
             me.finalize();
@@ -392,7 +392,7 @@ Zoom.prototype.reset = function() {
                 me.setZoom(identity);
             } else {
                 me.setZoom(Transform.avg(Z, identity, progress));
-                this.wnd.requestAnimationFrame(step);
+                me.wnd.requestAnimationFrame(step);
             }
         };
         this.wnd.requestAnimationFrame(step);
@@ -401,9 +401,8 @@ Zoom.prototype.reset = function() {
     }
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
-
-if (exports == undefined) {
-    window['Zoom'] = Zoom
+if (typeof exports === "undefined") {
+    window['Zoom'] = Zoom;
 } else {
     exports['Zoom'] = Zoom;
 }
