@@ -260,7 +260,8 @@ function Zoom(elem, config, wnd) {
     this.elem = elem;
     this.zooming = false;
     this.activeZoom = identity;
-    this.currentZoom = null;
+    this.resultantZoom = identity;
+
     this.srcCoords = [0, 0];
 
     var me = this;
@@ -304,23 +305,32 @@ function Zoom(elem, config, wnd) {
         if (!t) {
             return false;
         }
-        evt.preventDefault();
-        me.srcCoords = getCoords(t);
+        var do_reset = false;
+
         if (t.length === 2) {
             me.zooming = true;
-        } else if (t.length == 1) {
+        } else if (t.length === 1) {
             if (!tapped) {
-                tapped = setTimeout(function() {
+                tapped = true;
+                me.wnd.setTimeout(function() {
                     tapped = false;
                 }, 300);
                 if (me.config.pan) {
                     me.zooming = true;
                 }
             } else {
-                me.zooming = false;                
                 tapped = false;
-                me.reset();
+                do_reset = true;
             }
+        }
+        if (me.zooming || tapped || do_reset) {
+            evt.preventDefault();
+        }
+        if (me.zooming) {
+            me.srcCoords = getCoords(t);
+        }
+        if (do_reset) {
+            me.reset();
         }
     });
     
@@ -330,26 +340,40 @@ function Zoom(elem, config, wnd) {
             return false;
         }
         if (!me.zooming) {
-            // To prevent possible potential reorder of events.
             return false;
         }
         evt.preventDefault();
         var destCoords = getCoords(t);
-        me.currentZoom = zoom(me.srcCoords, destCoords, me.config.rotate);
-        var finalT = cascade(me.currentZoom, me.activeZoom);
-        me.update(finalT);
+        var additionalZoom = zoom(me.srcCoords, destCoords, me.config.rotate);
+        me.previewZoom(additionalZoom);
     });
 
     elem.parentNode.addEventListener('touchend', function() {
         if (me.zooming) {
-            me.activeZoom = cascade(me.currentZoom, me.activeZoom);
             me.zooming = false;
+            me.finalize();
+            evt.preventDefault();
         }
     });
 }
 
-Zoom.prototype.update = function(finalT) {
-    this.elem.style.transform = finalT.css();
+Zoom.prototype.previewZoom = function(additionalZoom) {
+    this.resultantZoom = cascade(this.activeZoom, additionalZoom);
+    this.repaint();
+};
+
+Zoom.prototype.setZoom = function(newZoom) {
+    this.resultantZoom = newZoom;
+    this.finalize();
+    this.repaint();
+};
+
+Zoom.prototype.finalize = function() {
+    this.activeZoom = this.resultantZoom;
+};
+
+Zoom.prototype.repaint = function() {
+    this.elem.style.transform = this.resultantZoom.css();
 };
 
 Zoom.prototype.reset = function() {
@@ -364,20 +388,16 @@ Zoom.prototype.reset = function() {
                 startTime =  time;
             }
             var progress = (time - startTime)/100;
-            if (progress > 1) {
-                me.activeZoom = identity;
-                me.zooming = false;
-                me.update(me.activeZoom);
+            if (progress >= 1) {
+                me.setZoom(identity);
             } else {
-                me.update(Transform.avg(Z, identity, progress));
+                me.setZoom(Transform.avg(Z, identity, progress));
                 this.wnd.requestAnimationFrame(step);
             }
         };
         this.wnd.requestAnimationFrame(step);
     } else {
-        this.activeZoom = identity;
-        this.zooming = false;
-        this.update(this.activeZoom);
+        this.setZoom(identity);
     }
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
