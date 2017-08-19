@@ -484,49 +484,45 @@ function Zoom(elem, config, wnd) {
             return false;
         }
         var ts = t.length;
-        return cb(ts);
-    }
+        return cb(t, ts);
+    };
 
     elem.parentNode.addEventListener('touchstart', function(evt) {
-        handleTouchEvent(evt, function(ts) {
+        handleTouchEvent(evt, function(t, ts) {
             switch (ts) {
-                case 1: return ts1();
-                case 2: return ts2();
+                case 1: return ts1(t);
+                case 2: return ts2(t);
                 default: return false;
             }
-        })
+        });
     });
     
     elem.parentNode.addEventListener('touchmove', function(evt) {
-        handleTouchEvent(evt, function(ts) {
+        handleTouchEvent(evt, function(t, ts) {
             switch (ts) {
-                case 1: return tm1();
-                case 2: return tm2();
+                case 1: return tm1(t);
+                case 2: return tm2(t);
                 default: return false;
             }
-        })
+        });
 
         
     });
 
     elem.parentNode.addEventListener('touchend', function(evt) {
-        handleTouchEvent(evt, function(ts) {
+        handleTouchEvent(evt, function(t, ts) {
             switch (ts) {
-                case 1: return te1();
-                case 2: return te2();
+                case 1: return te1(t);
+                case 2: return te2(t);
                 default: return false;
             }
-        })
+        });
 
     });
 }
 
-
-
-
-
 Zoom.prototype.previewZoom = function() {
-    var additionalZoom = zoom(me.srcCoords, me.destCoords, me.config.rotate);
+    var additionalZoom = zoom(this.srcCoords, this.destCoords, this.config.rotate);
     this.resultantZoom = cascade(additionalZoom, this.activeZoom);
     this.repaint();
 };
