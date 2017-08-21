@@ -390,7 +390,7 @@ Zoom.prototype.reset = function() {
             if (!startTime) { 
                 startTime =  time;
             }
-            var progress = (time - startTime)/1000;
+            var progress = (time - startTime)/100;
             if (progress >= 1) {
                 me.setZoom(identity);
                 me.isAnimationRunning = false;
@@ -401,7 +401,7 @@ Zoom.prototype.reset = function() {
         };
         this.wnd.requestAnimationFrame(step);
     } else {
-        me.setZoom(identity);
+        this.setZoom(identity);
     }
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
