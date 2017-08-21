@@ -5,7 +5,7 @@ For a DEMO open this on mobile: http://anitasv.github.io/zoom/
 
 Type| Link | Size
 -|-|-
-Minified | http://anitasv.github.io/zoom/zoom-1.0.6.min.js | 2136 bytes (gzip: 1024 bytes)
+Minified | http://anitasv.github.io/zoom/zoom-1.0.6.min.js | 2193 bytes (gzip: 1030 bytes)
 Debugging | http://anitasv.github.io/zoom/zoom-1.0.6.js | 10334 bytes
 NPM | https://www.npmjs.com/package/zoom-it | 
 
