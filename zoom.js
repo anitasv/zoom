@@ -1,5 +1,5 @@
-// Type Matrix is [ [a00, a10], [a01, a11] ]
 // Type Vector is [ x, y ]
+// Type Matrix is [ Vector, Vector ]
 // Type Transform is [ Matrix, Vector ]
 
 /**
@@ -247,7 +247,7 @@ var default_config = function(cfg, cfg_def) {
     for (k in cfg_def) {
         new_cfg[k] = defaults(new_cfg[k], cfg_def[k])
     }
-    return new_cfg
+    return new_cfg;
 };
 
 /**
@@ -257,16 +257,18 @@ var default_config = function(cfg, cfg_def) {
  * @param {Object} config to specify additiona features.
  */
 function Zoom(elem, config, wnd) {
+    this.mayBeDoubleTap = null;
+    this.isAnimationRunning = false;
+    // SingleFinger = 1, DoubleFinger = 2, NoTouch = 0
+    this.curTouch = 0;
     this.elem = elem;
-    this.zooming = false;
     this.activeZoom = identity;
     this.resultantZoom = identity;
 
     this.srcCoords = [0, 0];
-
+    this.destCoords = [0, 0];
     var me = this;
-    var tapped = false;
-
+    
     this.config = default_config(config, {
         "pan" : false,
         "rotate" : true
@@ -300,71 +302,71 @@ function Zoom(elem, config, wnd) {
         return t.length > 1 ? getCoordsDouble(t) : getCoordsSingle(t);
     };
 
-    elem.parentNode.addEventListener('touchstart', function(evt) {
-        var t = evt.touches;
-        if (!t) {
-            return false;
-        }
-        var do_reset = false;
+    var setSrcAndDest = function(touches){
+        me.srcCoords = getCoords(touches);
+        me.destCoords = me.srcCoords;
+    };
 
-        if (t.length === 2) {
-            me.zooming = true;
-        } else if (t.length === 1) {
-            if (!tapped) {
-                tapped = true;
-                me.wnd.setTimeout(function() {
-                    tapped = false;
-                }, 300);
-                if (me.config.pan) {
-                    me.zooming = true;
-                }
-            } else {
-                tapped = false;
-                do_reset = true;
-            }
-        }
-        if (me.zooming || tapped || do_reset) {
+    var setDest = function(touches){
+        me.destCoords = getCoords(touches);
+    };
+
+    var handleTouchEvent = function(cb) {
+        return function(evt) {
             evt.preventDefault();
-        }
-        if (me.zooming) {
-            me.srcCoords = getCoords(t);
-        }
-        if (do_reset) {
-            me.reset();
+            if (me.isAnimationRunning){
+                return false;
+            }            
+            var touches = evt.touches;
+            if (!touches) {
+                return false;
+            }
+            cb(touches);
+        };
+    };
+
+    var handleZoom = handleTouchEvent(function(touches) {
+        var numOfFingers = touches.length;
+        if (numOfFingers != me.curTouch){
+            me.curTouch = numOfFingers;
+            me.finalize();
+            if (numOfFingers != 0) {
+                setSrcAndDest(touches);
+            }
+        } else {
+            setDest(touches);
+            me.previewZoom();
         }
     });
     
-    elem.parentNode.addEventListener('touchmove', function(evt) {
-        var t = evt.touches;
-        if (!t) {
-            return false;
+    var handleTouchStart = handleTouchEvent(function(touches) {
+        if (touches.length === 1) {
+            if (me.mayBeDoubleTap != null) {
+                me.wnd.clearTimeout(me.mayBeDoubleTap);
+                me.reset();
+                me.mayBeDoubleTap = null;
+            } else {
+                me.mayBeDoubleTap = me.wnd.setTimeout(function() {
+                    me.mayBeDoubleTap = null;                    
+                }, 300);
+            }
         }
-        if (!me.zooming) {
-            return false;
-        }
-        evt.preventDefault();
-        var destCoords = getCoords(t);
-        var additionalZoom = zoom(me.srcCoords, destCoords, me.config.rotate);
-        me.previewZoom(additionalZoom);
     });
 
-    elem.parentNode.addEventListener('touchend', function(evt) {
-        if (me.zooming) {
-            me.zooming = false;
-            me.finalize();
-            evt.preventDefault();
-        }
-    });
+    elem.parentNode.addEventListener('touchstart', handleTouchStart);
+    elem.parentNode.addEventListener('touchstart', handleZoom);
+    elem.parentNode.addEventListener('touchmove', handleZoom);
+    elem.parentNode.addEventListener('touchend', handleZoom);
 }
 
-Zoom.prototype.previewZoom = function(additionalZoom) {
+Zoom.prototype.previewZoom = function() {
+    var additionalZoom = zoom(this.srcCoords, this.destCoords, this.config.rotate);
     this.resultantZoom = cascade(additionalZoom, this.activeZoom);
     this.repaint();
 };
 
 Zoom.prototype.setZoom = function(newZoom) {
     this.resultantZoom = newZoom;
-    this.finalize();
     this.repaint();
 };
 
@@ -378,6 +380,7 @@ Zoom.prototype.repaint = function() {
 
 Zoom.prototype.reset = function() {
     if (this.wnd.requestAnimationFrame) {
+        this.isAnimationRunning = true;
         var Z = this.activeZoom;
         var startTime = null;
 
@@ -387,9 +390,10 @@ Zoom.prototype.reset = function() {
             if (!startTime) { 
                 startTime =  time;
             }
-            var progress = (time - startTime)/100;
+            var progress = (time - startTime)/1000;
             if (progress >= 1) {
                 me.setZoom(identity);
+                me.isAnimationRunning = false;
             } else {
                 me.setZoom(Transform.avg(Z, identity, progress));
                 me.wnd.requestAnimationFrame(step);
@@ -397,7 +401,7 @@ Zoom.prototype.reset = function() {
         };
         this.wnd.requestAnimationFrame(step);
     } else {
-        this.setZoom(identity);
+        me.setZoom(identity);
     }
 };
 Zoom.prototype['reset'] = Zoom.prototype.reset;
