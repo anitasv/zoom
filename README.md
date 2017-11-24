@@ -45,7 +45,6 @@ var wnd = window; // Get this.
 
 var elem = document.getElementById('torotate');
 var zm = new zoom.Zoom(elem, {
-    pan: true,
     rotate: true
 }, wnd);
 
