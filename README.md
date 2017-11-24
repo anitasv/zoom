@@ -29,11 +29,12 @@ The overflow:hidden is to crop the image moving outside the original border. Be 
 ```js
 var elem = document.getElementById('torotate');
 var zm = new Zoom(elem, {
-    pan: true,
     rotate: true
 });
 
 ```
+Pan cannot be currently disabled, there is an outstanding issue on it.
+
 You can do operations like zm.reset() on this object, by default it attaches listeners to the object given.
 
 If you are using NPM, then
