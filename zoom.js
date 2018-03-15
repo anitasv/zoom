@@ -4,7 +4,7 @@
 
 /**
  * Multiply Scalar with Vector returns a Vector.
- * 
+ *
  * @param {number} l scalar to multiply with
  * @param {Array<number>} x 2D vector.
  * @return {Array<number>}
@@ -15,7 +15,7 @@ var scmult = function(l, x) {
 
 /**
  * Adding two vectors is another vector.
- * 
+ *
  * @param {Array<number>} a 2D vector.
  * @param {Array<number>} b 2D vector.
  * @return {Array<number>} Sum vector.
@@ -26,7 +26,7 @@ var vcadd = function(a, b) {
 
 /**
  * Subtracting two vectors is another vector.
- * 
+ *
  * @param {Array<number>} a 2D vector.
  * @param {Array<number>} b 2D vector.
  * @return {Array<number>} Difference vector.
@@ -37,7 +37,7 @@ var minus = function(a, b) {
 
 /**
  * Dot product of two vectors is scalar.
- * 
+ *
  * @param {Array<number>} a 2D vector.
  * @param {Array<number>} b 2D vector.
  * @return {number} scalar inner product.
@@ -48,7 +48,7 @@ var dot = function(a, b) {
 
 /**
  * Exterior Product of two vectors is a pseudoscalar.
- * 
+ *
  * @param {Array<number>} a 2D vector.
  * @param {Array<number>} b 2D vector.
  * @return {number} psuedo-scalar exterior product.
@@ -59,7 +59,7 @@ var wedge = function(a, b) {
 
 /**
  * Apply Matrix on Vector returns a Vector.
- * 
+ *
  * @param {Array<Array<number>>} A 2x2 Matrix
  * @param {Array<number>} x 2D vector.
  * @return {Array<number>} 2D vector linear product.
@@ -70,7 +70,7 @@ var apply = function(A, x) {
 
 /**
  * Multiply two matrices.
- * 
+ *
  * @param {Array<Array<number>>} A 2x2 Matrix
  * @param {Array<Array<number>>} B 2x2 Matrix
  * @return {Array<Array<number>>} A 2x2 Matrix
@@ -81,9 +81,9 @@ var mult = function(A, B) {
 
 /**
  * Represents a transform operation, Ax + b
- * 
+ *
  * @constructor
- * 
+ *
  * @param {Array<Array<number>>} A 2x2 Matrix.
  * @param {Array<number>} b 2D scalar.
  */
@@ -94,7 +94,7 @@ function Transform(A, b) {
 
 /**
  * Given CSS Transform representation of the class.
- * @return {string} CSS 2D Transform. 
+ * @return {string} CSS 2D Transform.
  */
 Transform.prototype.css = function() {
     var A = this.A;
@@ -104,18 +104,18 @@ Transform.prototype.css = function() {
 };
 
 /**
- * Multiply two transforms. 
- * Defined as 
+ * Multiply two transforms.
+ * Defined as
  *  (T o U) (x) = T(U(x))
- * 
+ *
  * Derivation:
- *  T(U(x)) 
- *   = T(U.A(x) + U.b) 
+ *  T(U(x))
+ *   = T(U.A(x) + U.b)
  *   = T.A(U.A(x) + U.b)) + T.b
- *   = T.A(U.A(x)) + T.A(U.b) + T.b 
- * 
- * @param {Transform} T 
- * @param {Transform} U 
+ *   = T.A(U.A(x)) + T.A(U.b) + T.b
+ *
+ * @param {Transform} T
+ * @param {Transform} U
  * @return {Transform} T o U
  */
 var cascade = function(T, U) {
@@ -124,7 +124,7 @@ var cascade = function(T, U) {
 
 /**
  * Creates the default rotation matrix
- * 
+ *
  * @param {number} c x-projection (r cos(theta))
  * @param {number} s y-projection (r sin(theta))
  * @return {Array<Array<number>>} Rotation matrix.
@@ -135,7 +135,7 @@ var rotate = function(c, s) {
 
 /**
  * Returns matrix that transforms vector a to vector b.
- * 
+ *
  * @param {Array<number>} a 2D vector.
  * @param {Array<number>} b 2D vector.
  * @return {Array<Array<number>>} Rotation + Scale matrix
@@ -159,13 +159,13 @@ var justscale = function(a, b) {
  * points to a new pair of destination points. If rotate it is false
  * then it won't be maintaining the transfer precisely, but will only
  * do scaling part of it.
- * 
+ *
  * @param {Array<Array<number>>} s two source points.
  * @param {Array<Array<number>>} d two destination points.
  * @param {Boolean} rotate true - rotate; else scale.
- * 
- * @return {Transform} that moves point 's' to point 'd' 
- */ 
+ *
+ * @return {Transform} that moves point 's' to point 'd'
+ */
 var zoom = function(s, d, rotate) {
     // Source vector.
     var a = minus(s[1], s[0]);
@@ -184,11 +184,11 @@ var zoom = function(s, d, rotate) {
 
 /**
  * Weighted average of two vectors.
- * 
+ *
  * @param {Array<number>} u 2D vector.
  * @param {Array<number>} v 2D vector.
  * @param {number} progress (from 0 to 1)
- * @return {Array<number>} (1-p) u + (p) v 
+ * @return {Array<number>} (1-p) u + (p) v
  */
 var avgVector = function(u, v, progress) {
     var u1 = scmult(1 - progress, u);
@@ -198,11 +198,11 @@ var avgVector = function(u, v, progress) {
 
 /**
  * Weighted average of two vectors.
- * 
+ *
  * @return {Array<Array<number>>} A 2D matrix.
  * @return {Array<Array<number>>} B 2D matrix.
  * @param {number} progress (from 0 to 1)
- * @return {Array<Array<number>>} (1-p) A + (p) B 
+ * @return {Array<Array<number>>} (1-p) A + (p) B
  */
 var avgMatrix = function(A, B, progress) {
     return [ avgVector(A[0], B[0], progress),  avgVector(A[1], B[1], progress) ];
@@ -214,7 +214,7 @@ var avgMatrix = function(A, B, progress) {
  * @param {Transform} Z Source Transform
  * @param {Transform} I Destination Transform
  * @param {number} progress (from 0 to 1)
- * @return {Transform} (1-p) Z + (p) I 
+ * @return {Transform} (1-p) Z + (p) I
  */
 Transform.avg = function(Z, I, progress) {
     return new Transform(avgMatrix(Z.A, I.A, progress), avgVector(Z.b, I.b, progress));
@@ -224,7 +224,7 @@ var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
 
 /**
  * Gives a default value for an input object.
- * 
+ *
  * @param {Object} param input parameter, may be undefined
  * @param {Object} val returned if param is undefined.
  * @return {Object}
@@ -237,7 +237,7 @@ var defaults = function(param, val) {
  * Method to override json config objects with default
  * values. If undefined in cfg corresponding value from
  * cfg_def will be picked.
- * 
+ *
  * @param {Object} cfg input parameter config.
  * @param {Object} cfg_def default fallbacks.
  * @return {Object} new config
@@ -268,7 +268,7 @@ function Zoom(elem, config, wnd) {
     this.srcCoords = [0, 0];
     this.destCoords = [0, 0];
     var me = this;
-    
+
     this.config = default_config(config, {
         "pan" : false,
         "rotate" : true
@@ -280,21 +280,21 @@ function Zoom(elem, config, wnd) {
 
     var getCoordsDouble = function(t) {
         var oX = elem.offsetLeft;
-        var oY = elem.offsetTop; 
-        return [ 
+        var oY = elem.offsetTop;
+        return [
             [t[0].pageX - oX, t[0].pageY - oY],
-            [t[1].pageX - oX, t[1].pageY - oY] 
+            [t[1].pageX - oX, t[1].pageY - oY]
         ];
     };
 
     var getCoordsSingle = function(t) {
         var oX = elem.offsetLeft;
-        var oY = elem.offsetTop; 
+        var oY = elem.offsetTop;
         var x = t[0].pageX - oX;
         var y = t[0].pageY - oY;
-        return [ 
+        return [
             [x, y],
-            [x + 1, y + 1] 
+            [x + 1, y + 1]
         ];
     };
 
@@ -313,10 +313,9 @@ function Zoom(elem, config, wnd) {
 
     var handleTouchEvent = function(cb) {
         return function(evt) {
-            evt.preventDefault();
             if (me.isAnimationRunning){
                 return false;
-            }            
+            }
             var touches = evt.touches;
             if (!touches) {
                 return false;
@@ -338,7 +337,7 @@ function Zoom(elem, config, wnd) {
             me.previewZoom();
         }
     });
-    
+
     var handleTouchStart = handleTouchEvent(function(touches) {
         if (touches.length === 1) {
             if (me.mayBeDoubleTap != null) {
@@ -347,7 +346,7 @@ function Zoom(elem, config, wnd) {
                 me.mayBeDoubleTap = null;
             } else {
                 me.mayBeDoubleTap = me.wnd.setTimeout(function() {
-                    me.mayBeDoubleTap = null;                    
+                    me.mayBeDoubleTap = null;
                 }, 300);
             }
         }
@@ -387,7 +386,7 @@ Zoom.prototype.reset = function() {
         var me = this;
 
         var step = function(time) {
-            if (!startTime) { 
+            if (!startTime) {
                 startTime =  time;
             }
             var progress = (time - startTime)/100;
