@@ -244,7 +244,7 @@ var defaults = function(param, val) {
  */
 var default_config = function(cfg, cfg_def) {
     var new_cfg = defaults(cfg, {})
-    for (k in cfg_def) {
+    for (var k in cfg_def) {
         new_cfg[k] = defaults(new_cfg[k], cfg_def[k])
     }
     return new_cfg;
