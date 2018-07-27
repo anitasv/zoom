@@ -344,10 +344,10 @@ function Zoom(elem, config, wnd) {
             if (me.mayBeDoubleTap !== null) {
                 me.wnd.clearTimeout(me.mayBeDoubleTap);
                 me.reset();
-                me.mayBeDoubleTap === null;
+                me.mayBeDoubleTap = null;
             } else {
                 me.mayBeDoubleTap = me.wnd.setTimeout(function() {
-                    me.mayBeDoubleTap === null;                    
+                    me.mayBeDoubleTap = null;                    
                 }, 300);
             }
         }
