@@ -151,7 +151,7 @@ var justscale = function(a, b) {
     var alen = Math.sqrt(dot(a, a));
     var blen = Math.sqrt(dot(b, b));
     var scale = blen / alen;
-    return rotate(scale, 0)
+    return rotate(scale, 0);
 };
 
 /**
@@ -230,7 +230,7 @@ var identity = new Transform([[1, 0], [0, 1]], [0, 0]);
  * @return {Object}
  */
 var defaults = function(param, val) {
-    return (param == undefined) ? val : param;
+    return (param === undefined) ? val : param;
 };
 
 /**
@@ -243,9 +243,9 @@ var defaults = function(param, val) {
  * @return {Object} new config
  */
 var default_config = function(cfg, cfg_def) {
-    var new_cfg = defaults(cfg, {})
-    for (k in cfg_def) {
-        new_cfg[k] = defaults(new_cfg[k], cfg_def[k])
+    var new_cfg = defaults(cfg, {});
+    for (var k in cfg_def) {
+        new_cfg[k] = defaults(new_cfg[k], cfg_def[k]);
     }
     return new_cfg;
 };
@@ -327,10 +327,10 @@ function Zoom(elem, config, wnd) {
 
     var handleZoom = handleTouchEvent(function(touches) {
         var numOfFingers = touches.length;
-        if (numOfFingers != me.curTouch){
+        if (numOfFingers !== me.curTouch){
             me.curTouch = numOfFingers;
             me.finalize();
-            if (numOfFingers != 0) {
+            if (numOfFingers !== 0) {
                 setSrcAndDest(touches);
             }
         } else {
@@ -341,13 +341,13 @@ function Zoom(elem, config, wnd) {
     
     var handleTouchStart = handleTouchEvent(function(touches) {
         if (touches.length === 1) {
-            if (me.mayBeDoubleTap != null) {
+            if (me.mayBeDoubleTap !== null) {
                 me.wnd.clearTimeout(me.mayBeDoubleTap);
                 me.reset();
-                me.mayBeDoubleTap = null;
+                me.mayBeDoubleTap === null;
             } else {
                 me.mayBeDoubleTap = me.wnd.setTimeout(function() {
-                    me.mayBeDoubleTap = null;                    
+                    me.mayBeDoubleTap === null;                    
                 }, 300);
             }
         }
