@@ -276,6 +276,10 @@ function Zoom(elem, config, wnd) {
 
     this.wnd = wnd || window;
 
+    // trigger browser optimisations for the transition
+    // see https://dev.opera.com/articles/css-will-change-property/
+    elem.style['will-change'] = 'transform';
+
     elem.style['transform-origin'] = '0 0';
 
     var getCoordsDouble = function(t) {
