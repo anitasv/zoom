@@ -176,13 +176,13 @@ var justscale = function(a, b) {
  *
  * @return {Transform} that moves point 's' to point 'd'
  */
-var zoom = function(s, d, rotate, min, max) {
+var zoom = function(s, d, allowRotation, min, max) {
     // Source vector.
     var a = minus(s[1], s[0]);
     // Destination vector.
     var b = minus(d[1], d[0]);
     // Rotation needed for source to dest vector.
-    var rs = rotate ? rotscale(a, b) : justscale(a, b);
+    var rs = allowRotation ? rotscale(a, b) : justscale(a, b);
 
     var scale = len(b) / len(a);
 
