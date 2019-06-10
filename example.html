@@ -1,0 +1,30 @@
+<html>
+<head>
+  <meta name=viewport 
+    content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+</head>
+
+<body>
+  <div id="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Solanum_melongena_24_08_2012_%281%29.JPG/1200px-Solanum_melongena_24_08_2012_%281%29.JPG">
+  </div>
+
+  <script src="./zoom.js"></script>
+  <script>
+    var elem = document.getElementByTagName('img');
+    new Zoom(elem);
+  </script>
+  <style>
+    #container {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      overflow: hidden;
+    }
+
+    img {
+      width: 260px;
+    }
+  </style>
+</body>
+</html>
