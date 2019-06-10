@@ -187,10 +187,12 @@ var zoom = function(s, d, allowRotation, min, max) {
     var scale = len(b) / len(a);
 
     // clamp zoom
-    if (scale > max || scale < min) {
-        rs = apply(rotate(1 / scale, 0), rs)
+    if (scale > max) {
+        rs = mult(rotate(max / scale, 0), rs);
+    } else if (scale < min) {
+        rs = mult(rotate(min / scale, 0), rs);
     }
-
+    
     // Position of s[0] if rotation is applied.
     var rs0 = apply(rs, s[0]);
     // Since d[0] = rs0 + t
