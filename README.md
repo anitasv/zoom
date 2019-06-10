@@ -32,6 +32,9 @@ var zm = new Zoom(elem, {
     rotate: true
 });
 
+// after use, call to remove event listeners, etc:
+zm.destroy()
+
 ```
 Pan cannot be currently disabled, there is an outstanding issue on it.
 
