@@ -283,7 +283,7 @@ function Zoom(elem, config, wnd) {
     elem.style['transform-origin'] = '0 0';
 
     var getCoordsDouble = function(t) {
-        var rect = elem.getBoundingClientRect();
+        var rect = elem.parentNode.getBoundingClientRect();
         var oX = rect.left;
         var oY = rect.top;
         return [
@@ -293,7 +293,7 @@ function Zoom(elem, config, wnd) {
     };
 
     var getCoordsSingle = function(t) {
-        var rect = elem.getBoundingClientRect();
+        var rect = elem.parentNode.getBoundingClientRect();
         var oX = rect.left;
         var oY = rect.top;
         var x = t[0].pageX - oX;
