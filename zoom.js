@@ -293,8 +293,9 @@ function Zoom(elem, config, wnd) {
     };
 
     var getCoordsSingle = function(t) {
-        var oX = elem.offsetLeft;
-        var oY = elem.offsetTop;
+        var rect = elem.getBoundingClientRect();
+        var oX = rect.left;
+        var oY = rect.top;
         var x = t[0].pageX - oX;
         var y = t[0].pageY - oY;
         return [
