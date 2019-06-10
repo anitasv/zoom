@@ -192,11 +192,19 @@ var zoom = function(s, d, allowRotation, min, max) {
     } else if (scale < min) {
         rs = mult(rotate(min / scale, 0), rs);
     }
-    
-    // Position of s[0] if rotation is applied.
-    var rs0 = apply(rs, s[0]);
-    // Since d[0] = rs0 + t
-    var t = minus(d[0], rs0);
+
+    // anchor at touches which are more stationary, which avoids the pinch
+    // gesture causing unexpected panning once min or max scale is reached
+    var aDelta = minus(d[0], s[0]);
+    var bDelta = minus(d[1], s[1]);
+    var prop = len(aDelta) / (len(aDelta) + len(bDelta));
+
+    var sAvg = avgVector(s[0], s[1], prop);
+    var dAvg = avgVector(d[0], d[1], prop);
+
+    var rsAvg = apply(rs, sAvg);
+    // Since d = rs + t
+    var t = minus(dAvg, rsAvg);
 
     return new Transform(rs, t);
 };
