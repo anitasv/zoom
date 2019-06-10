@@ -14,7 +14,11 @@
     document.body.addEventListener('touchstart', e => e.preventDefault(), { passive: false })
 
     var elem = document.getElementById('zoom');
-    new Zoom(elem);
+    new Zoom(elem, {
+      minZoom: 0.5,
+      maxZoom: 2,
+      rotate: false,
+    });
   </script>
   <style>
     #container {
