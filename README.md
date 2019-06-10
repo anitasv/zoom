@@ -44,11 +44,10 @@ If you are using NPM, then
 
 ```js
 var zoom = require("zoom-it");
-var wnd = window; // Get this.
 
 var elem = document.getElementById('torotate');
 var zm = new zoom.Zoom(elem, {
     rotate: true
-}, wnd);
+});
 
 ```
