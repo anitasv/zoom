@@ -262,6 +262,8 @@ function Zoom(elem, config, wnd) {
     // SingleFinger = 1, DoubleFinger = 2, NoTouch = 0
     this.curTouch = 0;
     this.elem = elem;
+    // keep reference to parent in case elem is moved elsewhere in DOM
+    this.elemParent = elem.parentNode;
     this.activeZoom = identity;
     this.resultantZoom = identity;
 
@@ -328,7 +330,7 @@ function Zoom(elem, config, wnd) {
         };
     };
 
-    var handleZoom = handleTouchEvent(function(touches) {
+    this._handleZoom = handleTouchEvent(function(touches) {
         var numOfFingers = touches.length;
         if (numOfFingers !== me.curTouch){
             me.curTouch = numOfFingers;
@@ -342,7 +344,7 @@ function Zoom(elem, config, wnd) {
         }
     });
 
-    var handleTouchStart = handleTouchEvent(function(touches) {
+    this._handleTouchStart = handleTouchEvent(function(touches) {
         if (touches.length === 1) {
             if (me.mayBeDoubleTap !== null) {
                 me.wnd.clearTimeout(me.mayBeDoubleTap);
@@ -356,11 +358,22 @@ function Zoom(elem, config, wnd) {
         }
     });
 
-    elem.parentNode.addEventListener('touchstart', handleTouchStart);
-    elem.parentNode.addEventListener('touchstart', handleZoom);
-    elem.parentNode.addEventListener('touchmove', handleZoom);
-    elem.parentNode.addEventListener('touchend', handleZoom);
+    this.elemParent.addEventListener('touchstart', this._handleTouchStart);
+    this.elemParent.addEventListener('touchstart', this._handleZoom);
+    this.elemParent.addEventListener('touchmove', this._handleZoom);
+    this.elemParent.addEventListener('touchend', this._handleZoom);
 }
+
+Zoom.prototype.destroy = function() {
+    this.elemParent.removeEventListener('touchstart', this._handleTouchStart);
+    this.elemParent.removeEventListener('touchstart', this._handleZoom);
+    this.elemParent.removeEventListener('touchmove', this._handleZoom);
+    this.elemParent.removeEventListener('touchend', this._handleZoom);
+
+    this.elem.style['will-change'] = null;
+    this.elem.style['transform-origin'] = null;
+    this.elem.style.transform = null;
+};
 
 Zoom.prototype.previewZoom = function() {
     var additionalZoom = zoom(this.srcCoords, this.destCoords, this.config.rotate);
