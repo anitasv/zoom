@@ -47,6 +47,16 @@ var dot = function(a, b) {
 };
 
 /**
+ * Get scalar length of 2D vector.
+ *
+ * @param {Array<number>} x 2D vector.
+ * @return {number}
+ */
+var len = function(x) {
+    return Math.sqrt(dot(x, x));
+}
+
+/**
  * Exterior Product of two vectors is a pseudoscalar.
  *
  * @param {Array<number>} a 2D vector.
@@ -148,9 +158,7 @@ var rotscale = function(a, b) {
 };
 
 var justscale = function(a, b) {
-    var alen = Math.sqrt(dot(a, a));
-    var blen = Math.sqrt(dot(b, b));
-    var scale = blen / alen;
+    var scale = len(b) / len(a);
     return rotate(scale, 0);
 };
 
@@ -162,22 +170,41 @@ var justscale = function(a, b) {
  *
  * @param {Array<Array<number>>} s two source points.
  * @param {Array<Array<number>>} d two destination points.
- * @param {Boolean} rotate true - rotate; else scale.
+ * @param {Boolean} allowRotation true - rotate; else scale.
+ * @param {Number} min scale of transform.
+ * @param {Number} max scale of transform.
  *
  * @return {Transform} that moves point 's' to point 'd'
  */
-var zoom = function(s, d, rotate) {
+var zoom = function(s, d, allowRotation, min, max) {
     // Source vector.
     var a = minus(s[1], s[0]);
     // Destination vector.
     var b = minus(d[1], d[0]);
     // Rotation needed for source to dest vector.
-    var rs = rotate ? rotscale(a, b) : justscale(a, b);
+    var rs = allowRotation ? rotscale(a, b) : justscale(a, b);
 
-    // Position of s[0] if rotation is applied.
-    var rs0 = apply(rs, s[0]);
-    // Since d[0] = rs0 + t
-    var t = minus(d[0], rs0);
+    var scale = len(b) / len(a);
+
+    // clamp zoom
+    if (scale > max) {
+        rs = mult(rotate(max / scale, 0), rs);
+    } else if (scale < min) {
+        rs = mult(rotate(min / scale, 0), rs);
+    }
+
+    // anchor at touches which are more stationary, which avoids the pinch
+    // gesture causing unexpected panning once min or max scale is reached
+    var aDelta = minus(d[0], s[0]);
+    var bDelta = minus(d[1], s[1]);
+    var prop = len(aDelta) / (len(aDelta) + len(bDelta));
+
+    var sAvg = avgVector(s[0], s[1], prop);
+    var dAvg = avgVector(d[0], d[1], prop);
+
+    var rsAvg = apply(rs, sAvg);
+    // Since d = rs + t
+    var t = minus(dAvg, rsAvg);
 
     return new Transform(rs, t);
 };
@@ -272,6 +299,8 @@ function Zoom(elem, config, wnd) {
     var me = this;
 
     this.config = default_config(config, {
+        "minZoom" : 0,
+        "maxZoom" : Infinity,
         "pan" : false,
         "rotate" : true
     });
@@ -376,8 +405,22 @@ Zoom.prototype.destroy = function() {
 };
 
 Zoom.prototype.previewZoom = function() {
-    var additionalZoom = zoom(this.srcCoords, this.destCoords, this.config.rotate);
+    // the scale of the transform is the length of either of the column vectors
+    var activeScale = len(this.activeZoom.A[0]);
+
+    var minAdditionalZoom = this.config.minZoom / activeScale;
+    var maxAdditionalZoom = this.config.maxZoom / activeScale;
+
+    var additionalZoom = zoom(
+        this.srcCoords,
+        this.destCoords,
+        this.config.rotate,
+        minAdditionalZoom,
+        maxAdditionalZoom
+    );
+
     this.resultantZoom = cascade(additionalZoom, this.activeZoom);
+
     this.repaint();
 };
 
