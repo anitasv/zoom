@@ -170,7 +170,7 @@ var justscale = function(a, b) {
  *
  * @param {Array<Array<number>>} s two source points.
  * @param {Array<Array<number>>} d two destination points.
- * @param {Boolean} rotate true - rotate; else scale.
+ * @param {Boolean} allowRotation true - rotate; else scale.
  * @param {Number} min scale of transform.
  * @param {Number} max scale of transform.
  *
