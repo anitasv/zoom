@@ -1,0 +1,32 @@
+<html>
+<head>
+  <meta name=viewport content="width=device-width, user-scalable=no">
+</head>
+
+<body>
+  <div id="container">
+    <img id="zoom" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Solanum_melongena_24_08_2012_%281%29.JPG/1200px-Solanum_melongena_24_08_2012_%281%29.JPG">
+  </div>
+
+  <script src="./zoom.js"></script>
+  <script>
+    // disable native pinch zoom
+    document.body.addEventListener('touchstart', e => e.preventDefault(), { passive: false })
+
+    var elem = document.getElementById('zoom');
+    new Zoom(elem);
+  </script>
+  <style>
+    #container {
+      background:rgba(255, 0, 0, 0.1);
+      overflow: hidden;
+      width: 250px;
+      height: 400px;
+    }
+
+    img {
+      width: 100%;
+    }
+  </style>
+</body>
+</html>

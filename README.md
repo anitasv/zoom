@@ -32,20 +32,25 @@ var zm = new Zoom(elem, {
     rotate: true
 });
 
+// after use, call to remove event listeners, etc:
+zm.destroy()
+
 ```
 Pan cannot be currently disabled, there is an outstanding issue on it.
 
 You can do operations like zm.reset() on this object, by default it attaches listeners to the object given.
 
+Optionally pass a `window`-like object as the third parameter (e.g. for testing,
+or use in a non-browser environment).
+
 If you are using NPM, then
 
 ```js
 var zoom = require("zoom-it");
-var wnd = window; // Get this.
 
 var elem = document.getElementById('torotate');
 var zm = new zoom.Zoom(elem, {
     rotate: true
-}, wnd);
+});
 
 ```
