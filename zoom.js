@@ -285,8 +285,9 @@ function Zoom(elem, config, wnd) {
     elem.style['transform-origin'] = '0 0';
 
     var getCoordsDouble = function(t) {
-        var oX = elem.offsetLeft;
-        var oY = elem.offsetTop;
+        var rect = elem.parentNode.getBoundingClientRect();
+        var oX = rect.left;
+        var oY = rect.top;
         return [
             [t[0].pageX - oX, t[0].pageY - oY],
             [t[1].pageX - oX, t[1].pageY - oY]
@@ -294,8 +295,9 @@ function Zoom(elem, config, wnd) {
     };
 
     var getCoordsSingle = function(t) {
-        var oX = elem.offsetLeft;
-        var oY = elem.offsetTop;
+        var rect = elem.parentNode.getBoundingClientRect();
+        var oX = rect.left;
+        var oY = rect.top;
         var x = t[0].pageX - oX;
         var y = t[0].pageY - oY;
         return [
