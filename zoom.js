@@ -147,12 +147,52 @@ var rotscale = function(a, b) {
     return rotate( sig / alen, del / alen);
 };
 
+/**
+ * Returns matrix that transforms vector a to vector b. But
+ * does not take care of rotation. In other words it returns
+ * a matrix that purely scales up by ratio of length of b to a.
+ * Since we want to avoid rotation even flipping we are only 
+ * rating absolute ratios. Otherwise we would have mirror 
+ * reflections.
+ * 
+ * I couldn't figure out a way to implement without sqrt()
+ *
+ * @param {Array<number>} a 2D vector.
+ * @param {Array<number>} b 2D vector.
+ * @return {Array<Array<number>>} Scale matrix
+ */
 var justscale = function(a, b) {
     var alen = Math.sqrt(dot(a, a));
     var blen = Math.sqrt(dot(b, b));
     var scale = blen / alen;
     return rotate(scale, 0);
 };
+
+/**
+ * Returns for a similarity preserving matrix what will be
+ * the magnification level. 
+ * 
+ * In this case both eigen values will be equal. Trace of 
+ * a matrix will give the sum of their eigen values. Half of
+ * trace will give the eigen value itself.
+ * 
+ * @param {Array<Array<number>>} A input matrix.
+ */
+var magnification = function(A) {
+    return Math.abs((A[0][0] + A[1][1]) / 2);
+}
+
+/**
+ * Scale a matrix by a given scalar.
+ * 
+ * @param {Array<Array<number>>} A input matrix.
+ * @param {number} l scalar to multiply 
+ * @return {Array<Array<number>>} Scaled matrix
+ */
+var scaleMatrix = function(A, l) {
+    return [scmult(l, A[0]), scmult(l, A[1])]
+}
+
 
 /**
  * Zoom is a similarity preserving transform from a pair of source
@@ -162,17 +202,26 @@ var justscale = function(a, b) {
  *
  * @param {Array<Array<number>>} s two source points.
  * @param {Array<Array<number>>} d two destination points.
- * @param {Boolean} rotate true - rotate; else scale.
+ * @param {Boolean} allowRotation true - rotate; else scale.
+ * @param {number} minZoom zoom should exceed this. 
+ * @param {number} maxZoom zoom should not exceed this.
  *
  * @return {Transform} that moves point 's' to point 'd'
  */
-var zoom = function(s, d, rotate) {
+var zoom = function(s, d, allowRotation, minZoom, maxZoom) {
     // Source vector.
     var a = minus(s[1], s[0]);
     // Destination vector.
     var b = minus(d[1], d[0]);
-    // Rotation needed for source to dest vector.
-    var rs = rotate ? rotscale(a, b) : justscale(a, b);
+    // Rotation needed for source to dest vector.    
+    var rs = allowRotation ? rotscale(a, b) : justscale(a, b);
+
+    var mag = magnification(rs);
+    if (mag < minZoom) {
+        rs = scaleMatrix(rs, minZoom / mag);
+    } else if (mag > maxZoom) {
+        rs = scaleMatrix(rs, maxZoom / mag);
+    }
 
     // Position of s[0] if rotation is applied.
     var rs0 = apply(rs, s[0]);
@@ -273,7 +322,9 @@ function Zoom(elem, config, wnd) {
 
     this.config = default_config(config, {
         "pan" : false,
-        "rotate" : true
+        "rotate" : true,
+        "minZoom" : 0, 
+        "maxZoom" : Infinity
     });
 
     this.wnd = wnd || window;
@@ -321,6 +372,7 @@ function Zoom(elem, config, wnd) {
 
     var handleTouchEvent = function(cb) {
         return function(evt) {
+            evt.preventDefault();
             if (me.isAnimationRunning){
                 return false;
             }
@@ -378,7 +430,11 @@ Zoom.prototype.destroy = function() {
 };
 
 Zoom.prototype.previewZoom = function() {
-    var additionalZoom = zoom(this.srcCoords, this.destCoords, this.config.rotate);
+    var zoomLevel = magnification(this.activeZoom.A);
+    var minZoom = this.config['minZoom'] / zoomLevel;
+    var maxZoom = this.config['maxZoom'] / zoomLevel;
+
+    var additionalZoom = zoom(this.srcCoords, this.destCoords, this.config.rotate, minZoom, maxZoom);
     this.resultantZoom = cascade(additionalZoom, this.activeZoom);
     this.repaint();
 };
