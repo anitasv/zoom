@@ -5,8 +5,8 @@ For a DEMO open this on mobile: http://anitasv.github.io/zoom/
 
 Type| Link | Size
 -|-|-
-Minified | http://anitasv.github.io/zoom/zoom-1.0.7.min.js | 2184 bytes (gzip: 1024 bytes)
-Debugging | http://anitasv.github.io/zoom/zoom-1.0.7.js | 10815 bytes
+Minified | http://anitasv.github.io/zoom/zoom-1.0.7.min.js | 2472 bytes (gzip: 1155 bytes)
+Debugging | http://anitasv.github.io/zoom/zoom-1.0.7.js | 12893 bytes
 NPM | https://www.npmjs.com/package/zoom-it | 
 
 For an explanation of math see https://github.com/anitasv/zoom/wiki/Explaining-Math
@@ -50,7 +50,10 @@ var zoom = require("zoom-it");
 
 var elem = document.getElementById('torotate');
 var zm = new zoom.Zoom(elem, {
-    rotate: true
+    rotate: true,
+    minZoom: 0,
+    maxZoom: Infinity,
+    pan: false,
 });
 
 ```
